@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: a-chieve
+spec:
+  destination:
+    namespace: postgresql
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: master
+    chart: postgresql
+    helm:
+      values: |
+        primary:
+          persistence:
+            enabled: true
+        global:
+          postgresql:
+            auth:
+              postgresPassword: "example-password"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
